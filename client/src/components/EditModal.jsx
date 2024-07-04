@@ -3,7 +3,7 @@ import DefinedModal from './DefinedModal'
 import { useDisclosure, IconButton } from '@chakra-ui/react'
 import { CiEdit } from "react-icons/ci";
 
-function EditModal({friend}) {
+function EditModal({friend, setFriends}) {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -17,7 +17,7 @@ function EditModal({friend}) {
           icon={<CiEdit size={20} />}
         />
 
-        <DefinedModal isOpen={isOpen} onClose={onClose} friend={friend} />
+        <DefinedModal isOpen={isOpen} onClose={onClose} friend={friend} setFriends={setFriends}/>
       </>
     );
 }

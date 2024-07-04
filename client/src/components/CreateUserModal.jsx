@@ -3,7 +3,7 @@ import React from 'react'
 import { BiAddToQueue } from "react-icons/bi";
 import DefinedModal from './DefinedModal';
 
-function CreateUserModal() {
+function CreateUserModal({ setFriends }) {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -12,7 +12,7 @@ function CreateUserModal() {
         <Button onClick={onOpen}>
           <BiAddToQueue size={20} />
         </Button>
-        <DefinedModal isOpen={isOpen} onClose={onClose} />
+        <DefinedModal isOpen={isOpen} onClose={onClose} setFriends={setFriends} />
       </>
     );
 }

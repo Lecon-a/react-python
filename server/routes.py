@@ -3,7 +3,7 @@ from flask import request, jsonify
 from model import Friend
 
 # get all friends
-@app.route('/api/friends', methods = ['GET'])
+@app.route('/api/v1/friends', methods = ['GET'])
 def get_friends():
     friends = Friend.query.all()
 
@@ -13,14 +13,14 @@ def get_friends():
     })
 
 # create a new friend
-@app.route('/api/friends', methods = ['POST'])
+@app.route('/api/v1/friends', methods = ['POST'])
 def create_friend():
     try:
         data = request.json
 
         required_fields = ['name', 'role', 'description', 'gender']
         for field in required_fields:
-            if field not in data:
+            if field not in data or not data.get(field):
                 return jsonify({"error": f"Missing required field: {field}"}), 400
             
         name = data.get('name')
@@ -41,22 +41,22 @@ def create_friend():
 
         friend.create()
 
-        return jsonify({'msg': 'Friend created successfully'}), 201  
+        return jsonify(friend.to_json()), 201  
       
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/friends/<int:friend_id>', methods=['DELETE', 'PATCH', 'GET'])
-def delete_friend(friend_id):
-    if request.method == 'DELETE':
-        return delete_friend_logic(friend_id)
-    elif request.method == 'PATCH':
-        return update_friend_logic(friend_id)
-    else:
-        return get_friend_byId(friend_id)
+# @app.route('/api/v1/friends/<int:friend_id>', methods=['DELETE', 'PATCH', 'GET'])
+# def delete_friend(friend_id):
+#     if request.method == 'DELETE':
+#         delete_friend_logic(friend_id)
+#     elif request.method == 'PATCH':
+#         update_friend_logic(friend_id)
+#     else:
+#         get_friend_byId(friend_id)
 
-
+@app.route('/api/v1/friends/<int:id>', methods=['DELETE'])
 def delete_friend_logic(id):
     friend = Friend.query.get(id)
     if not friend:
@@ -66,6 +66,7 @@ def delete_friend_logic(id):
     
     return jsonify({"msg": "Friend deleted successfully"}), 201
 
+@app.route('/api/v1/friends/<int:id>', methods=['PATCH'])
 def update_friend_logic(id):
     friend = Friend.query.get(id)
     if not friend:
@@ -87,7 +88,8 @@ def update_friend_logic(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    
+
+@app.route('/api/v1/friends/<int:id>', methods=['GET'])   
 def get_friend_byId(id):
     friend = Friend.query.get(id)
 
