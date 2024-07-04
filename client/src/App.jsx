@@ -28,7 +28,7 @@ function App() {
             fontSize="6xl"
             fontWeight="extrabold"
           >
-            MY BESTIES
+            MY FRIENDS
           </Text>
           🚀
         </Text>
